@@ -32,12 +32,20 @@ app.post("/api/contact", async (req, res) => {
 
     // Mail options
     const mailOptions = {
-      from: email,
+      from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
+      replyTo: email,
       subject: `Contact Form Submission from ${name}`,
-      text: message,
-    };
+      text: `
+    You received a new message from your portfolio contact form:
 
+    Name: ${name}
+    Email: ${email}
+    
+    Message:
+    ${message}
+  `,
+    };
     await transporter.sendMail(mailOptions);
     res.status(200).json({ success: true });
   } catch (error) {
